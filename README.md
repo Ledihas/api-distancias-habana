@@ -39,7 +39,7 @@ cp .env.example .env
 
 
 # Edita el archivo .env con tu token de Wit.ai
-```
+
 
 ## Uso 🚀
 

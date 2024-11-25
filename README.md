@@ -41,8 +41,6 @@ cp .env.example .env
 # Edita el archivo .env con tu token de Wit.ai
 
 
-## Uso 🚀
-
 ### Ejecutar localmente
 ```bash
 
@@ -63,3 +61,32 @@ distancias-habana-api/
 ├── .env
 └── README.md
 ```
+
+
+## API Endpoints 🛣️
+
+### GET /
+- Verifica si el servicio está activo
+- Respuesta: "El servicio está vivo!"
+
+### GET /enviar
+- Parámetros:
+  - string1: Lugar de origen
+  - string2: Lugar de destino
+- Respuesta: Distancia en kilómetros entre los lugares especificados
+
+## Despliegue 🌐
+El proyecto está configurado para ser desplegado en Render.com. Ver la [documentación de despliegue](https://render.com/docs) para más detalles.
+
+## Variables de Entorno 🔐
+- `WIT_AI_TOKEN`: Token de autenticación para Wit.ai
+- `PORT`: Puerto para el servidor (por defecto: 5000)
+
+## Contribuir 🤝
+Las contribuciones son bienvenidas. Por favor, abre un issue primero para discutir los cambios que te gustaría hacer.
+
+## Licencia 📄
+Este proyecto está bajo la Licencia MIT - ver el archivo [LICENSE](LICENSE) para más detalles.
+
+## Autor ✒️
+- Ledihas - [Ledihas](https://github.com/Ledihas)

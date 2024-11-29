@@ -79,6 +79,7 @@ def enviar():
             return "No se pudo procesar la solicitud.", 400
     else:
         return 'Faltan parámetros string1 o string2', 400
+    pass
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))

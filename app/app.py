@@ -80,6 +80,7 @@ def enviar():
             return "No se pudo procesar la solicitud.", 400
     
     return "Error al procesar la respuesta de Wit.ai", 400
+pass
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))

@@ -113,10 +113,10 @@ def desviacion():
     
     if string1 and string2 and string3:
         try:
-            lat1, lon1 = map(float, string1.split(','))
-            lat2, lon2 = map(float, string2.split(','))
-            coordenadas1 = [lat1, lon1]
-            coordenadas2 = [lat2, lon2]
+            lat1, lon1 = string1.split(',')
+            lat2, lon2 = string2.split(',')
+            coordenadas1 = [float(lat1), float(lon1)]
+            coordenadas2 = [float(lat2), float(lon2)]
         except ValueError:
             return {"error": "Formato de coordenadas inválido"}, 400
         

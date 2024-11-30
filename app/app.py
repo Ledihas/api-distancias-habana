@@ -109,10 +109,16 @@ def desviacion():
     string1 = request.args.get('string1')
     string2 = request.args.get('string2')
     string3 = request.args.get('string3')
-    coordenadas1 = float(string1)
-    coordenadas2 = float(string2)
+
     
     if string1 and string2 and string3:
+        try:
+            lat1, lon1 = map(float, string1.split(','))
+            lat2, lon2 = map(float, string2.split(','))
+            coordenadas1 = [lat1, lon1]
+            coordenadas2 = [lat2, lon2]
+        except ValueError:
+            return {"error": "Formato de coordenadas inválido"}, 400
         
         texto_a_enviar = f"deme la direccion gps de {string3}"
         url_post = 'https://api.wit.ai/message'

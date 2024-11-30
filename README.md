@@ -1,7 +1,7 @@
 # API de Distancias - La Habana 🚗
 
 ## Descripción
-API REST que proporciona las distancias por carretera entre diferentes municipios de La Habana y otras localidades de Cuba. Utiliza procesamiento de lenguaje natural (NLP) a través de Wit.ai para interpretar las consultas de los usuarios.
+API REST que proporciona las distancias por carretera entre diferentes municipios de La Habana y otras localidades de Cuba. Utiliza procesamiento de lenguaje natural (NLP) a través de Wit.ai para interpretar las consultas de los usuarios y calcular desvíos en las rutas.
 
 ## Características ✨
 - Consulta de distancias entre municipios de La Habana
@@ -10,7 +10,9 @@ API REST que proporciona las distancias por carretera entre diferentes municipio
 - Respuestas en formato JSON con distancias en kilómetros
 - Base de datos con más de 80 ubicaciones en La Habana
 - Cálculo automático de distancias usando coordenadas GPS
-- Incremento del 30% en la distancia para compensar rutas indirectas
+- Incremento del 30% en la distancia base para compensar rutas indirectas
+- Cálculo de desvíos con incremento del 40% en la distancia
+- Soporte para coordenadas GPS directas en formato latitud,longitud
 
 ## Tecnologías Utilizadas 🛠️
 - Python 3.12
@@ -59,7 +61,21 @@ python app/app.py
 - Ejemplo de respuesta exitosa:
 ```json
 {
-    "distancia": 12.34
+    "distancia": 12.34,
+    "coordenadas1": [23.123456, -82.123456],
+    "coordenadas2": [23.123456, -82.123456]
+}
+```
+
+#### GET /desviacion
+- Parámetros:
+  - string1: Coordenadas de origen (formato: "latitud,longitud")
+  - string2: Coordenadas de destino (formato: "latitud,longitud")
+  - string3: Lugar del desvío
+- Ejemplo de respuesta exitosa:
+```json
+{
+    "distancia": 15.45
 }
 ```
 

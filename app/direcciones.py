@@ -41,7 +41,7 @@ DIRECCIONES = {
     "Cañas":(23.11353912402564, -82.39206056866021),
     
     "Palatino":(23.102646871713507, -82.3841679735284),
-    "Armada":(),
+    "Armada, Cerro":(),
     "Casino Deportivo": (23.09264001285679, -82.35913261551178),
     "Martí": (23.10864817857439, -82.38685286343065),
     "Villanueva": (23.112306333456004, -82.36167797795906),
@@ -214,3 +214,6 @@ DIRECCIONES = {
     
     "Jacomino":(23.09869954592248, -82.33272414038994),
 }
+
+# Duplicar el diccionario con claves en minúscula
+DIRECCIONES.update({k.lower(): v for k, v in DIRECCIONES.items()})

@@ -3,7 +3,7 @@ from dotenv import load_dotenv
 import requests
 import os
 from math import sqrt, radians
-from app.direcciones import DIRECCIONES
+from direcciones import DIRECCIONES
 
 app = Flask(__name__)
 
@@ -46,7 +46,7 @@ def enviar():
                 
 
                 # Obtener los lugares reconocidos (origen y destino)
-                lugares = [entity['value'] for entity in data['entities'].get('wit$location:location', [])]
+                lugares = [entity['body'] for entity in data['entities'].get('wit$location:location', [])]
                 contador = 0
                 print("Lugares reconocidos:", lugares) 
 

@@ -3,7 +3,7 @@ from dotenv import load_dotenv
 import requests
 import os
 from math import sqrt, radians
-from app.direcciones import DIRECCIONES
+from app.direcciones import DIRECCIONES , DIRECCIONES_Municipi
 
 app = Flask(__name__)
 coordenadas1 = None
@@ -54,23 +54,62 @@ def enviar():
                 
 
                 for lugar in lugares:
-                    
-                    if lugar in DIRECCIONES:
-                        if contador == 0:
-                        # Intentar obtener la distancia en ambas direcciones
-                            coordenadas1 = DIRECCIONES[str(lugar)]
-                            contador +=1
-                        elif contador == 1:
-                            coordenadas2 = DIRECCIONES[str(lugar)]
-                    else:
+                    # Verificar si alguna de las claves en DIRECCIONES está en el lugar reconocido
+                    encontrado = False
+                    for clave in DIRECCIONES.keys():
+                        if clave.lower() in lugar.lower():  # Comparar en minúsculas para evitar problemas de capitalización
+                            coordenadas1 = DIRECCIONES[clave]
+                            encontrado = True
+                            contador += 1
+                            break  # Salir del bucle una vez que se encuentra la primera coincidencia
+
+                    if not encontrado:
                         return "No se encontró alguna de las dos direcciones"
-                        
+
+                    # Si ya se encontró la primera dirección buscar la segunda
+                    if contador == 1:
+                        for clave in DIRECCIONES.keys():
+                            if clave.lower() in lugar.lower():
+                                coordenadas2 = DIRECCIONES[clave]
+                                break  # Salir del bucle una vez que se encuentra la segunda coincidencia
                     
-               
+                    if not coordenadas1 or not coordenadas2:
+                        if contador == 0:
+                            for clave in DIRECCIONES:
+                                if clave.lower in string1.lower:                          
+                                        coordenadas1 = DIRECCIONES[clave]
+                                        encontrado = True
+                                        contador += 1
+                                        break  # Salir del bucle una vez que se encuentra la primera coincidencia
+                            
+                        if contador == 1:
+                            for clave in DIRECCIONES.keys():
+                                if clave.lower() in string2.lower():
+                                    coordenadas2 = DIRECCIONES[clave]
+                                    encontrado = True
+                                    break  # Salir del bucle una vez que se encuentra la segunda coincidencia
+                        
+                    if not coordenadas1 or not coordenadas2:
+                        if contador == 0:
+                            for clave in DIRECCIONES_Municipi:
+                                if clave.lower in string1.lower:                          
+                                        coordenadas1 = DIRECCIONES_Municipi[clave]
+                                        encontrado = True
+                                        contador += 1
+                                        break  # Salir del bucle una vez que se encuentra la primera coincidencia
+                            
+                        if contador == 1:
+                            for clave in DIRECCIONES_Municipi.keys():
+                                if clave.lower() in string2.lower():
+                                    coordenadas2 = DIRECCIONES_Municipi[clave]
+                                    encontrado = True
+                                    break  # Salir del bucle una vez que se encuentra la segunda coincidencia
+                        
+
                 if not coordenadas1 or not coordenadas2 or len(coordenadas1) < 2 or len(coordenadas2) < 2:
                     return {
                         "error": "Coordenadas incompletas o inválidas para una o ambas ubicaciones",
-                        "ubicacion_problema": "Armada" if not coordenadas1 or len(coordenadas1) < 2 else "Altahabana"
+                        "ubicacion_problema": "" if not coordenadas1 or len(coordenadas1) < 2 else ""
                     }, 400
 
                 x1 = coordenadas1[0]

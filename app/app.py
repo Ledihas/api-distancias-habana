@@ -3,7 +3,7 @@ from dotenv import load_dotenv
 import requests
 import os
 from math import sqrt, radians
-from direcciones import DIRECCIONES , DIRECCIONES_Municipi
+from app.direcciones import DIRECCIONES , DIRECCIONES_Municipi
 
 app = Flask(__name__)
 coordenadas1 = None

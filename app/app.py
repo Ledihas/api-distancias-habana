@@ -3,12 +3,13 @@ from dotenv import load_dotenv
 import requests
 import os
 from math import sqrt, radians
-from app.direcciones import DIRECCIONES , DIRECCIONES_Municipi
+from direcciones import DIRECCIONES , DIRECCIONES_Municipi
 
 app = Flask(__name__)
 coordenadas1 = None
 coordenadas2 = None
 coordesvio = None
+
 @app.route("/")
 def hello_world():
     return "<p>El servicio está vivo!</p>"
@@ -50,61 +51,39 @@ def enviar():
                 lugares = [entity['body'] for entity in data['entities'].get('wit$location:location', [])]
                 contador = 0
                 print("Lugares reconocidos:", lugares) 
-
+                lugares_encontrados = 0
                 
 
                 for lugar in lugares:
                     # Verificar si alguna de las claves en DIRECCIONES está en el lugar reconocido
-                    encontrado = False
                     for clave in DIRECCIONES.keys():
                         if clave.lower() in lugar.lower():  # Comparar en minúsculas para evitar problemas de capitalización
-                            coordenadas1 = DIRECCIONES[clave]
-                            encontrado = True
-                            contador += 1
-                            break  # Salir del bucle una vez que se encuentra la primera coincidencia
-
-                    if not encontrado:
-                        return "No se encontró alguna de las dos direcciones"
-
-                    # Si ya se encontró la primera dirección buscar la segunda
-                    if contador == 1:
-                        for clave in DIRECCIONES.keys():
-                            if clave.lower() in lugar.lower():
+                            if lugares_encontrados == 0:
+                                coordenadas1 = DIRECCIONES[clave]
+                            elif lugares_encontrados == 1:
                                 coordenadas2 = DIRECCIONES[clave]
-                                break  # Salir del bucle una vez que se encuentra la segunda coincidencia
-                    
-                    if not coordenadas1 or not coordenadas2:
-                        if contador == 0:
-                            for clave in DIRECCIONES:
-                                if clave.lower in string1.lower:                          
-                                        coordenadas1 = DIRECCIONES[clave]
-                                        encontrado = True
-                                        contador += 1
-                                        break  # Salir del bucle una vez que se encuentra la primera coincidencia
-                            
-                        if contador == 1:
-                            for clave in DIRECCIONES.keys():
-                                if clave.lower() in string2.lower():
-                                    coordenadas2 = DIRECCIONES[clave]
-                                    encontrado = True
-                                    break  # Salir del bucle una vez que se encuentra la segunda coincidencia
-                        
-                    if not coordenadas1 or not coordenadas2:
-                        if contador == 0:
-                            for clave in DIRECCIONES_Municipi:
-                                if clave.lower in string1.lower:                          
-                                        coordenadas1 = DIRECCIONES_Municipi[clave]
-                                        encontrado = True
-                                        contador += 1
-                                        break  # Salir del bucle una vez que se encuentra la primera coincidencia
-                            
-                        if contador == 1:
-                            for clave in DIRECCIONES_Municipi.keys():
-                                if clave.lower() in string2.lower():
-                                    coordenadas2 = DIRECCIONES_Municipi[clave]
-                                    encontrado = True
-                                    break  # Salir del bucle una vez que se encuentra la segunda coincidencia
-                        
+                            lugares_encontrados += 1
+                            break  # Salir del bucle una vez que se encuentra una coincidencia
+
+                # Si no se encontraron suficientes lugares, buscar en los strings directamente
+                if lugares_encontrados < 2:
+                    for clave in DIRECCIONES.keys():
+                        if clave.lower() in string1.lower() and not coordenadas1:
+                            coordenadas1 = DIRECCIONES[clave]
+                            lugares_encontrados += 1
+                        if clave.lower() in string2.lower() and not coordenadas2:
+                            coordenadas2 = DIRECCIONES[clave]
+                            lugares_encontrados += 1
+
+                # Si aún no se encontraron suficientes lugares, buscar en DIRECCIONES_Municipi
+                if lugares_encontrados < 2:
+                    for clave in DIRECCIONES_Municipi.keys():
+                        if clave.lower() in string1.lower() and not coordenadas1:
+                            coordenadas1 = DIRECCIONES_Municipi[clave]
+                            lugares_encontrados += 1
+                        if clave.lower() in string2.lower() and not coordenadas2:
+                            coordenadas2 = DIRECCIONES_Municipi[clave]
+                            lugares_encontrados += 1
 
                 if not coordenadas1 or not coordenadas2 or len(coordenadas1) < 2 or len(coordenadas2) < 2:
                     return {

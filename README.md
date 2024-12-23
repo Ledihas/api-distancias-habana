@@ -54,6 +54,7 @@ python app/app.py
 - Verifica si el servicio está activo
 - Respuesta: "El servicio está vivo!"
 
+
 #### GET /enviar
 - Parámetros:
   - string1: Lugar de origen
@@ -78,6 +79,8 @@ python app/app.py
     "distancia": 15.45
 }
 ```
+
+
 
 ## Estructura del Proyecto 📁
 ```
@@ -110,3 +113,38 @@ Este proyecto está bajo la Licencia MIT - ver el archivo [LICENSE](LICENSE) par
 
 ## Autor ✒️
 - Ledihas - [Ledihas](https://github.com/Ledihas)
+
+## Ejemplos de Uso 🚀
+
+### Consultar Distancia
+
+**Solicitud:**
+```bash
+GET /enviar?string1=La%20Lisa&string2=Alamar
+```
+
+**Respuesta:**
+```json
+{
+    "distancia": 12.34,
+    "coordenadas1": [23.123456, -82.123456],
+    "coordenadas2": [23.654321, -82.654321]
+}
+```
+
+### Manejo de Errores
+
+- **Error 400**: Coordenadas incompletas o inválidas.
+- **Error 500**: Problema interno del servidor.
+
+## Contribuir 🤝
+
+Las contribuciones son bienvenidas. Por favor, abre un issue primero para discutir los cambios que te gustaría hacer. Asegúrate de seguir las pautas de estilo y de incluir pruebas para cualquier nueva funcionalidad.
+
+## Licencia 📄
+
+Este proyecto está bajo la Licencia MIT - ver el archivo [LICENSE](LICENSE) para más detalles.
+
+## Estado del Proyecto
+
+Este proyecto está actualmente en desarrollo y se están planificando nuevas características para mejorar la funcionalidad.

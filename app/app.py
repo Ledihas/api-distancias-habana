@@ -6,15 +6,12 @@ from math import sqrt, radians
 from app.direcciones import DIRECCIONES , DIRECCIONES_Municipi
 
 app = Flask(__name__)
-coordenadas1 = None
-coordenadas2 = None
-coordesvio = None
 
 @app.route("/")
 def hello_world():
     return "<p>El servicio está vivo!</p>"
 
-@app.route('/enviar', methods=['GET',"POST"])
+@app.route('/enviar', methods=['GET', "POST"])
 def enviar():
     # Obtener los parámetros de la cadena desde la solicitud GET
     string1 = request.args.get('string1')
@@ -39,88 +36,59 @@ def enviar():
         # Procesar la respuesta de Wit.ai
         data = response.json()
         print("Respuesta de Wit.ai:", data)
-        # Extraer la distancia si se reconoce correctamente el intent
-        if 'intents' in data and data['intents']:
-            intent_name = data['intents'][0]['name']
-            if intent_name == "ubicacion":
-                
-                
-                
 
-                # Obtener los lugares reconocidos (origen y destino)
-                lugares = [entity['body'] for entity in data['entities'].get('wit$location:location', [])]
-                contador = 0
-                print("Lugares reconocidos:", lugares) 
-                lugares_encontrados = 0
-                
+        # Inicializar coordenadas
+        coordenadas1 = None
+        coordenadas2 = None
 
-                for lugar in lugares:
-                    # Verificar si alguna de las claves en DIRECCIONES está en el lugar reconocido
-                    for clave in DIRECCIONES.keys():
-                        if clave.lower() in lugar.lower():  # Comparar en minúsculas para evitar problemas de capitalización
-                            if lugares_encontrados == 0:
-                                coordenadas1 = DIRECCIONES[clave]
-                            elif lugares_encontrados == 1:
-                                coordenadas2 = DIRECCIONES[clave]
-                            lugares_encontrados += 1
-                            break  # Salir del bucle una vez que se encuentra una coincidencia
+        # Buscar coordenadas para string1
+        for clave in DIRECCIONES.keys():
+            if clave.lower() in string1.lower():
+                coordenadas1 = DIRECCIONES[clave]
+                break
 
-                # Si no se encontraron suficientes lugares, buscar en los strings directamente
-                if lugares_encontrados < 2:
-                    for clave in DIRECCIONES.keys():
-                        if clave.lower() in string1.lower() and not coordenadas1:
-                            coordenadas1 = DIRECCIONES[clave]
-                            lugares_encontrados += 1
-                        if clave.lower() in string2.lower() and not coordenadas2:
-                            coordenadas2 = DIRECCIONES[clave]
-                            lugares_encontrados += 1
+        # Buscar coordenadas para string2
+        for clave in DIRECCIONES.keys():
+            if clave.lower() in string2.lower():
+                coordenadas2 = DIRECCIONES[clave]
+                break
 
-                # Si aún no se encontraron suficientes lugares, buscar en DIRECCIONES_Municipi
-                if lugares_encontrados < 2:
-                    for clave in DIRECCIONES_Municipi.keys():
-                        if clave.lower() in string1.lower() and not coordenadas1:
-                            coordenadas1 = DIRECCIONES_Municipi[clave]
-                            lugares_encontrados += 1
-                        if clave.lower() in string2.lower() and not coordenadas2:
-                            coordenadas2 = DIRECCIONES_Municipi[clave]
-                            lugares_encontrados += 1
+        # Si no se encontraron coordenadas en DIRECCIONES, buscar en DIRECCIONES_Municipi
+        if coordenadas1 is None:
+            for clave in DIRECCIONES_Municipi.keys():
+                if clave.lower() in string1.lower():
+                    coordenadas1 = DIRECCIONES_Municipi[clave]
+                    break
 
-                if not coordenadas1 or not coordenadas2 or len(coordenadas1) < 2 or len(coordenadas2) < 2:
-                    return {
-                        "error": "Coordenadas incompletas o inválidas para una o ambas ubicaciones",
-                        "ubicacion_problema": "" if not coordenadas1 or len(coordenadas1) < 2 else ""
-                    }, 400
+        if coordenadas2 is None:
+            for clave in DIRECCIONES_Municipi.keys():
+                if clave.lower() in string2.lower():
+                    coordenadas2 = DIRECCIONES_Municipi[clave]
+                    break
 
-                x1 = coordenadas1[0]
-                y1 = coordenadas1[1]
-                x2 = coordenadas2[0]
-                y2 = coordenadas2[1]
-                            
-                x1 = radians(x1)
-                y1 = radians(y1)
-                            
-                x2 = radians(x2)
-                y2 = radians(y2)
-                            
-                            
-                distancia_km = sqrt(pow((x2-x1),2) + pow((y2-y1),2)) * 6371
-                
-                            
-                # Convertir la respuesta a número si es posible
-                try:
-                    distancia_numerica = float(distancia_km)
-                    distancia_numerica = round(distancia_numerica, 2) 
-                    distancia_numerica += distancia_numerica * 0.30  
-                    return {"distancia": distancia_numerica, "coordenadas1": coordenadas1, "coordenadas2": coordenadas2}, 200
-                except (ValueError, TypeError):
-                    return {"error": "No se pudo convertir la distancia a número"}, 400
+        # Verificar si se encontraron coordenadas válidas
+        if coordenadas1 is None or coordenadas2 is None:
+            return {
+                "error": "Coordenadas incompletas o inválidas para una o ambas ubicaciones",
+                "ubicacion_problema": "" if coordenadas1 is not None else ""
+            }, 400
 
-                
-            else:
-                return "No se pudo procesar la solicitud.", 400
-        else:
-            return 'Faltan parámetros string1 o string2', 400
-    pass
+        # Calcular la distancia
+        x1, y1 = coordenadas1
+        x2, y2 = coordenadas2
+
+        # Calcular la distancia (en km)
+        distancia_km = sqrt(pow((x2 - x1), 2) + pow((y2 - y1), 2)) * 6371
+
+        # Convertir la respuesta a número si es posible
+        try:
+            distancia_numerica = float(distancia_km)
+            distancia_numerica = round(distancia_numerica, 2)
+            return {"distancia": distancia_numerica, "coordenadas1": coordenadas1, "coordenadas2": coordenadas2}, 200
+        except (ValueError, TypeError):
+            return {"error": "No se pudo convertir la distancia a número"}, 400
+
+    return 'Faltan parámetros string1 o string2', 400
 
 @app.route('/desviacion', methods=['GET','POST'])
 def desviacion():
@@ -164,7 +132,8 @@ def desviacion():
                 lugares = [entity['body'] for entity in data['entities'].get('wit$location:location', [])]
                 
                 print("Lugares reconocidos:", lugares) 
-
+                coordesvio = 0
+                
                 for lugar in lugares:
                     
                     if lugar in DIRECCIONES:
@@ -175,7 +144,7 @@ def desviacion():
                         
                     
                
-                if not coordenadas1 or not coordesvio:
+                if not coordenadas1 or coordesvio == 0:
                     return {
                         "error": "Coordenadas incompletas o inválidas para una o ambas ubicaciones",
                         

@@ -2,7 +2,7 @@ from flask import Flask, request
 from dotenv import load_dotenv
 import requests
 import os
-from math import sqrt, radians
+from math import sqrt, radians, sin, cos, atan2
 from app.direcciones import DIRECCIONES , DIRECCIONES_Municipi
 
 app = Flask(__name__)
@@ -78,7 +78,7 @@ def enviar():
         x2, y2 = coordenadas2
 
         # Calcular la distancia (en km)
-        distancia_km = sqrt(pow((x2 - x1), 2) + pow((y2 - y1), 2)) * 6371
+        distancia_km = haversine(coordenadas1,coordenadas2) #sqrt(pow((x2 - x1), 2) + pow((y2 - y1), 2)) * 6371
 
         # Convertir la respuesta a número si es posible
         try:
@@ -167,8 +167,8 @@ def desviacion():
                 y3 = radians(y3)
                             
                             
-                distancia_km1 = sqrt(pow((x2-x1),2) + pow((y2-y1),2)) * 6371
-                distancia_km2 = sqrt(pow((x2-x3),2) + pow((y2-y3),2)) * 6371
+                distancia_km1 = haversine(coordenadas1, coordesvio)
+                distancia_km2 = haversine(coordesvio, coordenadas2)
                 distancia_km = distancia_km1 + distancia_km2
                 
                             
@@ -189,6 +189,23 @@ def desviacion():
         
     
     pass
+
+def haversine(coord1, coord2):
+    # Radio de la Tierra en km
+    R = 6371.0
+
+    lat1, lon1 = radians(coord1[0]), radians(coord1[1])
+    lat2, lon2 = radians(coord2[0]), radians(coord2[1])
+
+    dlat = lat2 - lat1
+    dlon = lon2 - lon1
+
+    a = sin(dlat / 2)**2 + cos(lat1) * cos(lat2) * sin(dlon / 2)**2
+    c = 2 * atan2(sqrt(a), sqrt(1 - a))
+
+    distance = R * c
+    return distance
+
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     app.run(host='0.0.0.0', port=port)

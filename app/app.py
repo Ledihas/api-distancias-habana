@@ -192,7 +192,7 @@ def desviacion():
 
 def haversine(coord1, coord2):
     # Radio de la Tierra en km
-    R = 6371.0
+    R = 6365.0
 
     lat1, lon1 = radians(coord1[0]), radians(coord1[1])
     lat2, lon2 = radians(coord2[0]), radians(coord2[1])

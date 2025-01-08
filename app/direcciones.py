@@ -287,6 +287,8 @@ DIRECCIONES_Municipi = {
     # Plaza de la Revolución
     "Plaza de la Revolución": (23.120793049690818, -82.39207462314916),
     
+    "Plaza de la Revolucion": (23.120793049690818, -82.39207462314916),
+    
     # San Miguel
     "San Miguel": (23.08646276556728, -82.24731967207892),
     

@@ -266,8 +266,6 @@ DIRECCIONES_Municipi = {
     # Diez de Octubre
     "Diez de Octubre": (23.061518379116915, -82.33508032661274),
     
-    
-    #RECTIFICAR DESDE AQUÍ
     # Guanabacoa
     "Guanabacoa": (23.108794765505777, -82.24563151639383),
     
@@ -290,5 +288,9 @@ DIRECCIONES_Municipi = {
     "Plaza de la Revolución": (23.120793049690818, -82.39207462314916),
     
     # San Miguel
-    "San Miguel": (23.08646276556728, -82.24731967207892)
+    "San Miguel": (23.08646276556728, -82.24731967207892),
+    
+    # Regla
+    "Regla": (23.14756762000292, -82.33231705524186),
 }
+DIRECCIONES_Municipi.update({k.lower(): v for k, v in DIRECCIONES_Municipi.items()})

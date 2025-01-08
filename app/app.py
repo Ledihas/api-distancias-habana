@@ -139,6 +139,8 @@ def desviacion():
                     if lugar in DIRECCIONES:
                         
                         coordesvio = DIRECCIONES[str(lugar)]
+                    elif lugar in DIRECCIONES_Municipi:
+                        coordesvio = DIRECCIONES_Municipi[str(lugar)]
                     else:
                         return "No se encontró alguna de las dos direcciones"
                         
